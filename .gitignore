@@ -1,3 +1,6 @@
 /.venv/
 /reports/
 /.idea
+/.git
+/tests/__pycache__
+/__pycache__

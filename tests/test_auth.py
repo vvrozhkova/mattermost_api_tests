@@ -1,5 +1,4 @@
 import allure
-import pytest
 import requests
 from allure_commons._allure import step
 

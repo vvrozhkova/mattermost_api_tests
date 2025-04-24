@@ -9,6 +9,12 @@ headers = {"Authorization": "Bearer ninp4h45ej8nzd6p4wjeo5hn7w"}
 @allure.feature('Создание чата/канала')
 @allure.title('Создание чата/канала')
 def test_create_channel(base_url):
+    """
+      Тест для проверки создания чата/канала
+
+      1. Отправить /channels запрос, передав в теле корректные данные для создания чата
+      2. Проверить статус код ответа = 201
+      """
     body = {"team_id":"ktfw3dx11fradfpmsc3cekdrae","name":f'{uuid.uuid4()}',"display_name":"123", "type": "O"}
     response = create_channel(base_url, body)
     assert_status_code(response, 201)
@@ -16,6 +22,14 @@ def test_create_channel(base_url):
 @allure.feature('Создание чата/канала')
 @allure.title('Создание чата/канала с уже существующим именем')
 def test_create_duplicate_channel(base_url):
+    """
+      Тест для проверки создания чата/канала с уже существующим именем
+
+      1. Отправить /channels запрос, передав в теле корректные данные для создания чата
+      2. Проверить статус код ответа = 201
+      3. Отправить /channels запрос, передав в теле такие же данные для создания чата как в шаге 1
+      4. Проверить статус код ответа = 400 и текст сообщения "A channel with that name already exists on the same team."
+      """
     body = {"team_id":"ktfw3dx11fradfpmsc3cekdrae","name":f'{uuid.uuid4()}',"display_name":"123", "type": "O"}
     response = create_channel(base_url, body)
     assert_status_code(response, 201)

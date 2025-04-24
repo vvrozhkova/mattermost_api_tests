@@ -12,6 +12,14 @@ headers = {"Authorization": "Bearer ninp4h45ej8nzd6p4wjeo5hn7w"}
 @allure.feature('Управление пользователями')
 @allure.title('Добавление пользователя в канал')
 def test_add_member(base_url):
+    """
+     Тест для проверки добавления пользователя в канал
+
+     1. Создать нового пользователя
+     2. Добавить созданного пользователя в команду
+     3. Отправить channels/{channel_id}/members запрос, передав в теле данные пользователя для созданного на шаге 1
+     4. Проверить статус код ответа = 201 и что в теле ответа вернулись данные пользователя
+     """
     user_id = add_user(base_url)
     add_user_to_team(base_url, user_id)
     response = add_user_to_channel(base_url, user_id)
@@ -20,6 +28,15 @@ def test_add_member(base_url):
 @allure.feature('Управление пользователями')
 @allure.title('Удаление пользователя из канала')
 def test_remove_member(base_url):
+    """
+         Тест для проверки удаления пользователя в канал
+
+         1. Создать нового пользователя
+         2. Добавить созданного пользователя в команду
+         3. Добавить созданного пользователя в канал
+         4. Отправить delete channels/{channel_id}/members/{user_id} запрос, где user_id = id пользователя для созданного на шаге 1
+         4. Проверить статус код ответа = 200 и что в теле ответа вернулось тело где status = OK
+         """
     user_id = add_user(base_url)
     add_user_to_team(base_url, user_id)
     add_user_to_channel(base_url, user_id)

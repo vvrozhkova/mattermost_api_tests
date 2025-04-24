@@ -9,6 +9,12 @@ channel_id = "q8ca1kujb7no8xw1aozhrmyj6h"
 @allure.feature('Отправка сообщения')
 @allure.title('Проверка отправки сообщения в чат')
 def test_create_message(base_url):
+    """
+     Тест для проверки отправки сообщения в чат
+
+     1. Отправить POST /posts запрос, передав в теле данные с параметрами channel_id, message
+     2. Проверить статус код ответа = 201 и что в теле ответа вернулись данные пользователя который добавил сообщение
+     """
     body = {"channel_id": channel_id, "message": "string"}
     with allure.step('Выполняем запрос на отправку сообщения в чат'):
         response = requests.post(f'{base_url}/posts', json=body, headers=headers)
@@ -19,6 +25,12 @@ def test_create_message(base_url):
 @allure.feature('Отправка сообщения')
 @allure.title('Проверка получения сообщения в чате')
 def test_get_channel_messages(base_url):
+    """
+     Тест для проверки получения сообщения в чате
+
+     1. Отправить GET /channels/{channel_id}/posts запрос, где channel_id = id канала
+     2. Проверить статус код ответа = 200 и что в теле ответа вернулся не пустой список posts
+     """
     with allure.step('Выполняем запрос на получение сообщений из чата'):
         response = requests.get(f'{base_url}/channels/{channel_id}/posts', headers=headers)
     assert_status_code(response, 200)

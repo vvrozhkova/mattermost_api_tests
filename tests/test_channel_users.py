@@ -9,6 +9,7 @@ team_id = "ktfw3dx11fradfpmsc3cekdrae"
 channel_id = "q8ca1kujb7no8xw1aozhrmyj6h"
 headers = {"Authorization": "Bearer ninp4h45ej8nzd6p4wjeo5hn7w"}
 
+
 @allure.feature('Управление пользователями')
 @allure.title('Добавление пользователя в канал')
 def test_add_member(base_url):
@@ -24,6 +25,9 @@ def test_add_member(base_url):
     add_user_to_team(base_url, user_id)
     response = add_user_to_channel(base_url, user_id)
     assert response.json()["user_id"] == user_id
+    with allure.step('Проверяем что пользователь есть в списке участников канала'):
+        assert user_member_of_channel(base_url, channel_id, user_id)
+
 
 @allure.feature('Управление пользователями')
 @allure.title('Удаление пользователя из канала')
@@ -44,6 +48,8 @@ def test_remove_member(base_url):
         response = requests.delete(f'{base_url}/channels/{channel_id}/members/{user_id}', headers=headers)
     assert_status_code(response, 200)
     assert_response_param(response, "status", "OK")
+    with allure.step('Проверяем что пользователь отсутствует в списке участников канала'):
+        assert not user_member_of_channel(base_url, channel_id, user_id)
 
 
 def generate_random_strings(length):
@@ -68,10 +74,22 @@ def add_user_to_team(base_url, user_id):
                                  headers=headers)
     assert_status_code(response, 201)
 
+
 @step("Добавляем пользователя в канал")
 def add_user_to_channel(base_url, user_id):
     body = {"user_id": user_id}
     response = requests.post(f'{base_url}/channels/{channel_id}/members', json=body,
-                                   headers=headers)
+                             headers=headers)
     assert_status_code(response, 201)
     return response
+
+
+@step("Получаем пользователей канала")
+def get_channel_members(base_url, channel_id):
+    response = requests.get(f'{base_url}/channels/{channel_id}/members', headers=headers)
+    assert_status_code(response, 200)
+    return response.json()
+
+def user_member_of_channel(base_url, channel_id, user_id):
+    channel_users = get_channel_members(base_url, channel_id)
+    return [x for x in channel_users if x["user_id"] == user_id]

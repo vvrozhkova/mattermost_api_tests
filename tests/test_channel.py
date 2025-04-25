@@ -15,9 +15,12 @@ def test_create_channel(base_url):
       1. Отправить /channels запрос, передав в теле корректные данные для создания чата
       2. Проверить статус код ответа = 201
       """
-    body = {"team_id":"ktfw3dx11fradfpmsc3cekdrae","name":f'{uuid.uuid4()}',"display_name":"123", "type": "O"}
+    channel_name = f'{uuid.uuid4()}'
+    body = {"team_id":"ktfw3dx11fradfpmsc3cekdrae","name":channel_name,"display_name":"123", "type": "O"}
     response = create_channel(base_url, body)
     assert_status_code(response, 201)
+    is_channel_created = [x for x in get_channels(base_url).json() if x["name"] == channel_name]
+    assert is_channel_created
 
 @allure.feature('Создание чата/канала')
 @allure.title('Создание чата/канала с уже существующим именем')
@@ -40,3 +43,7 @@ def test_create_duplicate_channel(base_url):
 @step("Отправляем запрос на создание чата/канала")
 def create_channel(base_url, body):
     return requests.post(f'{base_url}/channels', json=body, headers=headers)
+
+@step("Отправляем запрос на получение списка чатов/каналов")
+def get_channels(base_url):
+    return requests.get(f'{base_url}/channels', headers=headers)

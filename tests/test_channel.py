@@ -14,7 +14,10 @@ def test_create_channel(base_url):
       Тест для проверки создания чата/канала
 
       1. Отправить /channels запрос, передав в теле корректные данные для создания чата
-      2. Проверить статус код ответа = 201
+
+      Ожидаемый результат:
+      1. Статус код ответа = 201
+      2. Канал появился в списке каналов
       """
     channel_name = f'{uuid.uuid4()}'
     body = {"team_id": "ktfw3dx11fradfpmsc3cekdrae", "name": channel_name, "display_name": "123", "type": "O"}
@@ -33,7 +36,11 @@ def test_create_duplicate_channel(base_url):
       1. Отправить /channels запрос, передав в теле корректные данные для создания чата
       2. Проверить статус код ответа = 201
       3. Отправить /channels запрос, передав в теле такие же данные для создания чата как в шаге 1
-      4. Проверить статус код ответа = 400 и текст сообщения "A channel with that name already exists on the same team."
+
+      Ожидаемый результат:
+      1. Статус код ответа = 400
+      2. Текст сообщения в ответе "A channel with that name already exists on the same team."
+      3. Канал не создан
       """
     channel_name = f'{uuid.uuid4()}'
     body = {"team_id": "ktfw3dx11fradfpmsc3cekdrae", "name": channel_name, "display_name": "123", "type": "O"}
